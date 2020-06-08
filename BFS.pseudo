@@ -1,0 +1,39 @@
+/*
+    BFS := Breadth First Search
+    ogni nodo viene visitato al massimo una sola volta: O(|V|)
+        solo se flag è BIANCO, appena entrati if parte ricorsione che setta subito flag a GRIGIO
+    viene scandita al massimo volta la lista di adiancenza di un nodo:
+        |Adj[v_1]| + ... + |Adj[v_n]| = |E| (con n = |V|, 2*|E| se orientato)
+        - con liste adiacenza: O(|E|)
+        - con matrice adiacenza: O(|V|)
+    tutte le altre operazioni hanno costo θ(1)
+    complexity liste:
+        θ(|V|) + O(|V|) + O(|E|) = θ(|V| + |E|)
+    complexity matrice:
+        θ(|V|) + O(|V| * |V|) = O(|V|^2)
+*/
+
+BFS(G) { //θ(|V| + |E|)
+    foreach (v in V) { //θ(|V|)
+        color[v] = BIANCO
+        pred[v] = NULL
+        d[v] = INFINITE
+    }
+    Q = EMPTY
+    d[s] = 0
+    color[s] = GRIGIO
+    Enqueue(Q, s)
+    while(Q != EMPTY) { //O(|V|)
+        u = Head(Q)
+        foreach (v in Adj[u]) { //O(E) each iteration, in total θ(E)
+            if(color[v] == BIANCO) {
+               d[v] = d[u] + 1
+               pred[v] = u
+               color[v] = GRIGIO
+               Enqueue[v]
+            }
+        }
+        color[u] = NERO
+        Dequeue(u)
+    }
+}

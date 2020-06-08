@@ -1,0 +1,35 @@
+/*
+    MST := Minimum Spanning Tree
+    consider: 
+        connected graph ==> |E| >= |V| - 1
+        tree to represent sets:
+            - with union by rank, path compression
+            - cost of m MUF with n make: O(m + α(n))
+        adjacency lists to represent edges
+    complexity:
+        initialization:     θ(|V|)
+        sort E:             O(|E| * log|E|)
+        m MUF, n make:      O(|E| * α|V|)
+            m = O(|E|): f + u + n = O(2 * |E|) + θ(|V|) + θ(|V|)
+                find:   f = O(2 * |E|)
+                union:  u = θ(|V|)
+                make:   n = θ(|V|)
+    θ(|V|) + O(|E| * log|E|) + O(|E| * α|V|) = O(|E| * log|V|)
+
+    NB
+    log|E| <= log(|V|^2) = 2 * log|V| ==> log(|E|) is in O(log|V|)
+*/
+MST_Kruskal(G) {
+    MST = empty
+    foreach (v in V) {
+        Make(v)
+    }
+    Sort(E)
+    foreach ({u, v} in E) {
+        if(Find(u) != Find(v)) {
+            Union(u, v)
+            MST = MST U {{u, v}}
+        }
+    }
+    return MST
+}

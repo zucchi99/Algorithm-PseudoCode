@@ -1,0 +1,9 @@
+MST_Generic_Greedy(G) {
+    MST = empty
+    while (|MST| < |V| - 1) {
+        trova_taglio(S, V\S) t.c. MAT rispetta_taglio(S, V\S)
+        trova_arco({u, v}) t.c. {u, v} leggero_taglio(S, V\S)
+        MST = MST U {u, v}
+    }
+    return MST
+}
