@@ -1,0 +1,42 @@
+/*
+    Topological Sort
+    Permette di dare un ordine topologico (non unico) a un grafo orientato aciclico
+    Si implementa con una modifica al codice di DFS
+    complexity:
+        come DFS
+*/
+
+DFS_Topological_Sort(G) { //θ(|V| + |E|)
+    L = EMPTY //lista con nodi ordinati modo decrescente
+    foreach (v in V) { //θ(|V|)
+        color[v] = BIANCO
+        pred[v] = NULL
+        i[v] = 0
+        f[v] = 0
+    }
+    TIME = 0
+    foreach (v in V) { //θ(|V|)
+        if(color[v] == BIANCO) {
+            DFS_Visit_Topological_Sort(G, v, L) //?
+        }
+    }
+}
+
+//G = (V', E') sottografo connesso con u in V'
+//θ(|V'| + |E'|) = O(|V| + |E|) 
+DFS_Visit_Topological_Sort(G, u, L) { //O(|V| + |E|) 
+    color[u] = GRIGIO
+    TIME = TIME + 1
+    i[u] = TIME
+    foreach (v in Adj[u]) { //O(E) each iteration, in total θ(E)
+        if (color[v] = BIANCO) {
+            pred[v] = u
+            DFS_Visit_Topological_Sort(G, v, L) //?
+        }
+    }
+    color[u] = NERO
+    TIME = TIME + 1
+    f[u] = TIME
+    L = insert_on_top(L, u) //inserito in testa alla lista il nodo u
+    return L
+}
