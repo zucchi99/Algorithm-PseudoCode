@@ -1,0 +1,54 @@
+/*
+    Disjointed sets implemented with trees
+    tree root is the is the set representative
+    this is the optimized implementation with Union by Rank
+    rank = tree height
+    complexity:
+    m MUF with n make = O(m * log n):
+        n = θ(n) make:     θ(n) * θ(1)      ==> O(m) worst case
+        f = O(m) find:     O(m) * O(log n)  ==> O(m * log n) worst case
+        u = O(n) union:    O(n) * O(log n)  ==> O(n * log n) worst case
+    O(m) + O(m * log n) + O(n log n) = O(m * log n)
+    
+    Theorem:
+        Trees height with Union by Rank is O(log n)
+        Rank_Union(x, y) costs O(log n):
+            O(|Sx| + |Sy|) = O(log n)
+        Rank_Find(x) costs O(log n):
+            O(|Sx|) = O(log n)
+*/
+
+struct Rank_Tree_Set {
+    key
+    parent
+    rank
+}
+
+Rank_Make(x) { //θ(1)
+    x.parent = x
+    x.rank = 1
+    return x
+}
+
+Find(x) { //O(|Sx|) = O(log n)
+    while(x.parent != x) {
+        x = x.parent
+    }
+    return x
+}
+
+Rank_Union(x, y) { //O(|Sx| + |Sy|) = O(log n)
+    w = Find(x) //O(|Sx|)
+    z = Find(y) //O(|Sy|)
+    if(w != z) {
+        if(z.rank > w.rank) {
+            w.parent = z
+        } else {
+            z.parent = w
+            if(w.rank == z.rank) {
+                w.rank++
+            }
+        }
+    }
+    return z
+}

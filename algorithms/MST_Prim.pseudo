@@ -1,0 +1,31 @@
+/*
+    MST := Minimum Spanning Tree
+    consider: 
+        connected graph ==> |E| >= |V| - 1
+        min heap as queue
+        adjacency lists to represent edges
+    complexity:
+        initialization:     θ(|V|)
+        extract minimum:    O(|V| * log|V|)
+        fix up heap:        O(|E| * log|V|)
+    θ(|V|) + O(|V| * log|V|) + O(|E| * log|V|) = O(|E| * log|V|)
+*/
+MST_Prim(G, s) { //O(|E| * log|V|)
+    foreach (v in v) { //θ(|V|)
+        pred[v] = NULL
+        key[v] = INFINITE
+    }
+    key[s] = 0
+    Q = V
+    BuildMinHeap(Q, key) //θ(|V|) (if implemented with min heap)
+    while(Q != EMPTY) { //θ(|V|)
+        u = ExtractMin(Q) //O(log|V|)
+        foreach ({u, v} in Adj[u]) { //O(E) each iteration, in total θ(E)
+            if (v in Q && key[v] > key[{u, v}]) {
+                pred[v] = u
+                key[v] = key[{u, v}]
+                HeapFixUp(Q, v) //O(log |V|) (if implemented with min heap)
+            }
+        }
+    }
+}

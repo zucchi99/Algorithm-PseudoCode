@@ -1,0 +1,60 @@
+/*
+    Disjointed sets implemented with adjacency lists
+    first element of the list is the set representative
+    this is the optimized implementation with Weighted Union
+    complexity:
+    m MUF with n make = O(m + n log n):
+        n = θ(n) make:     θ(n) * θ(1)     ==> O(m) worst case
+        f = O(m) find:     O(m) * θ(1)     ==> O(m) worst case
+        u = O(n) union:    O(n) * O(log n) ==> O(n log n) worst case
+    O(m) + O(m) + O(n log n) = O(m + n log n)
+
+    Theorem:
+        WU_Union(x, y) costs O(log n):
+        θ(min(|Sx|, |Sy|)) = O(log n)
+*/
+
+struct WU_List_Set {
+    key
+    next
+    rap
+    length
+    last
+}
+
+WU_Make(x) { //θ(1)
+    x.next = NULL
+    x.rap = x
+    x.length = 1
+    x.last = x
+    return x
+}
+
+Find(x) { //θ(1)
+    return x.rap
+}
+
+WU_Union(x, y) { ///θ( min(|Sx|, |Sy|) )
+    w = x.rap
+    z = y.rap
+    if(w != z) {
+        if(z.length > w.length) {
+            Link(z, w) //θ(|Sw|) = θ(|Sx|)
+        } else {
+            Link(w, z) //θ(|Sz|) = θ(|Sy|)
+        }
+    }
+}
+
+//assume |Sx| > |Sy|
+Link(x, y) { //θ(|Sy|)
+    j = x.last
+    j.next = y
+    x.last = y.last
+    x.length += y.length
+    while(y != NULL) { //θ(|Sy|)
+        y.rap = x
+        y = y.next
+    }
+    return x
+}

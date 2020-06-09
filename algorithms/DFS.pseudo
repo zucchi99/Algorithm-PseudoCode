@@ -1,0 +1,46 @@
+/*
+    DFS := Depth First Search
+    ogni nodo viene visitato una e una sola volta: θ(|V|)
+        solo se flag è BIANCO, appena entrati if parte ricorsione che setta subito flag a GRIGIO
+    viene scandita una e una sola volta la lista di adiancenza di un nodo:
+        |Adj[v_1]| + ... + |Adj[v_n]| = |E| (con n = |V|, 2*|E| se orientato)
+        - con liste adiacenza: θ(|E|)
+        - con matrice adiacenza: θ(|V|)
+    tutte le altre operazioni hanno costo θ(1)
+    complexity liste:
+        θ(|V|) + θ(|V|) + θ(|E|) = θ(|V| + |E|)
+    complexity matrice:
+        θ(|V|) + θ(|V| * |V|) = θ(|V|^2)
+*/
+
+DFS(G) { //θ(|V| + |E|)
+    foreach (v in V) { //θ(|V|)
+        color[v] = BIANCO
+        pred[v] = NULL
+        i[v] = 0
+        f[v] = 0
+    }
+    TIME = 0
+    foreach (v in V) { //θ(|V|)
+        if(color[v] == BIANCO) {
+            DFS_Visit(G, v) //?
+        }
+    }
+}
+
+//G = (V', E') sottografo connesso con u in V'
+//θ(|V'| + |E'|) = O(|V| + |E|) 
+DFS_Visit(G, u) { //O(|V| + |E|) 
+    color[u] = GRIGIO
+    TIME = TIME + 1
+    i[u] = TIME
+    foreach (v in Adj[u]) { //O(E) each iteration, in total θ(E)
+        if (color[v] = BIANCO) {
+            pred[v] = u
+            DFS_Visit(G, v) //?
+        }
+    }
+    color[u] = NERO
+    TIME = TIME + 1
+    f[u] = TIME
+}

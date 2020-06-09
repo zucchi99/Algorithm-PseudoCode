@@ -1,0 +1,43 @@
+/*
+    Disjointed sets implemented with adjacency lists
+    first element of the list is the set representative
+    this is the classic implementation. no optimizations.
+    complexity:
+    m MUF with n make = O(m + n^2):
+        n = θ(n) make:     θ(n) * θ(1) ==> O(m) worst case
+        f = O(m) find:     O(m) * θ(1) ==> O(m) worst case
+        u = O(n) union:    O(n) * O(n) ==> O(n^2) worst case
+    O(m) + O(m) + O(n^2) = O(m + n^2)
+*/
+
+
+struct List_Set {
+    key
+    next
+    rap
+}
+
+Make(x) { //θ(1)
+    x.next = NULL
+    x.rap = x
+    return x
+}
+
+Find(x) { //θ(1)
+    return x.rap
+}
+
+Union(x, y) { //O(n)
+    w = x.rap
+    z = y.rap
+    if(w != z) {
+        while(x.next != NULL) { //O(n)
+            x = x.next
+        }
+        x.next = z //change last.next: points to z not to NULL
+        while(z.next != NULL) { //O(n)
+            z.rap = w //update rap pointer for each element in z from z to w
+            z = z.next
+        }
+    }
+}
