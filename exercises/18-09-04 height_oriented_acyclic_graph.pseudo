@@ -1,0 +1,41 @@
+/*
+Esercizio 2.
+Sia G = (V;E) un grafo orientato e aciclico.
+Dato un nodo x 2 V , l'altezza h[x] di x in G e denita come la lunghezza massima di un qualsiasi percorso da x ad una foglia
+(i.e., nodo senza archi uscenti) di G.
+a. Scrivere lo pseudocodice di una procedura Height(G) che, dato G in input, calcoli, per ogni x 2 V , l'altezza h[x] di x in
+G.
+b. Si determini la complessita e si dimostri la correttezza della procedura proposta.
+*/
+
+Height_Graph(G) {
+    foreach (v in V) {
+        h[v] = 0
+        color[v] = BIANCO
+    }
+    foreach(v in V) {
+        if(color[v] = BIANCO) {
+            Height_Node(v)
+        }
+    }
+}
+
+Height_Node(x) {
+    color[x] = GRIGIO
+    if(Adj[x] = EMPTY) {
+        return h[x] = 0
+    } else {
+        maxHeight = 0
+        foreach (u in Adj[x]) {
+            if(color[u] = BIANCO) {
+                h[u] = Height_Node(u)
+            }
+            if(h[u] > maxHeight) {
+                maxHeight = h[u]
+            }
+        }
+        h[x] = maxHeight + 1
+        color[x] = NERO
+        return h[x]
+    }
+}
