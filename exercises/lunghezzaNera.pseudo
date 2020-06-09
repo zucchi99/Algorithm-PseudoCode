@@ -1,0 +1,28 @@
+/*
+3.2 x Compitino di ASD del 23-06-17
+Esercizio 1.
+Sia T un red-black tree, con radice nera, in cui esiste un percorso dalla radice ad una foglia costituito da tutti nodi neri.
+a. Scrivere lo pseudocodice di una procedura efficiente per determinare la lunghezza minima di un cammino radice-foglia in
+T. Dimostrare la correttezza e valutare la complessita della procedura proposta.
+b. Utilizzare il risultato restituito dalla procedura al punto a. per fornire l'intervallo di valori in cui si trova l'altezza di T.
+Quale ipotesi su T garantirebbe la conoscenza dell'altezza di T?
+*/
+
+main() {
+    minBhT = bh(T.root)
+}
+
+bh(x) {
+    if(x = NULL) {
+        return 1
+    } else if(x.color = red) {
+        return -1
+    } else {
+        bhl = bh(x.left)
+        bhr = bh(x.right)
+        if(bhl != -1 || bhr != -1) {
+            return 1 + max(bhl, bhr)
+        }
+        return -1
+    }
+}

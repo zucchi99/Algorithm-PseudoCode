@@ -1,0 +1,40 @@
+/*
+2.5 x Compito di ASD del 26-09-18
+Esercizio 1.
+Un B+-tree e un B-tree con la proprieta aggiuntiva di avere le foglie organizzate in una lista concatenata. Piu precisamente, se
+x e una foglia di T, allora next[x] punta alla foglia \alla destra" di x (NIL se x e la foglia piu a destra). Si veda la gura per un
+esempio.
+Sia T un B+-tree di grado t  2 contenente n chiavi naturali distinte e siano a e b due chiavi che non compaiono in T, con a < b.
+ Si proponga tramite pseudocodice una procedura eciente che, ricevuti in input T, a e b, stampi in ordine crescente le
+chiavi delle foglie di T appartenenti all'intervallo (a; b).
+ Qual e la complessita della procedura in funzione di n, t, a e b?
+*/
+
+PrintFromAToB(BT, a b){
+    x = Find(BT, BT.root, a)
+    i = 0
+    while(x.key[i] < a) {
+        i++
+    }
+    do {
+        while(x.key[i] < b && i < x.n) {
+            print(x.key[i])
+            i++
+        }
+        i = 0
+        x = Read(x.next)
+    } while(x.next != NULL)
+}
+
+Find(BT, x, a) {
+    Read(x)
+    if(x.leaf) {
+        return x
+    } else {
+        i = 0
+        while (i < x.n && x.key[i] < a) {
+            i++
+        }
+        Find(BT, x.c[i], a)
+    }
+}
