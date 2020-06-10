@@ -1,0 +1,35 @@
+Transitive_Closure(G) {
+    SCC = SCC_Kosaraju(G)
+    TopS = DFS_Topological_Sort(SCC)
+    TC = new_matrix(|SCC|, |SCC|) //TC (transitive closure) is a matrix [|SCC|, |SCC|]
+    foreach (scc in TopS) {
+        TC[scc] = EMPTY //each linked list contains all the scc reachable from it
+    }
+    foreach(u in V) {
+        i = Find(u)
+        foreach(v in Adj[u]) {
+            j = Find(v)
+            TC[i, j] = TRUE
+        }
+    }
+    Transitive_Closure(SCC, Tops, TC)
+}
+
+Transitive_Closure_SCC(SCC, Tops, TC) {
+    while(TopS != EMPTY) { //O(|V|)
+        scc = peek_last(TopS)
+        foreach (u in scc) { //O(|V|) each iteration, in total θ(|V|)
+            foreach (v in Adj[u]) { //O(|E|) each iteration, in total θ(|E|)
+                sccv = Find(v)
+                if(sccv != scc) {
+                    for(j = 0 to |SCC|) { //O(|V|)
+                        if(TC[sccv, j] = TRUE) {
+                            TCC[scc, j] = TRUE
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+}
