@@ -1,0 +1,87 @@
+/* Sia G = (V, E) un grafo orientato aciclico e siano u e v due nodi di G. */
+
+/* 2-a 
+Si descriva tramite pseudo-codice un algoritmo per determinare se esiste un cammino che parte da u 
+e termina in v (non prosegue). Se ne dimostri la correttezza e se ne calcoli la complessità.
+
+DIM. Il nodo v è terminale se non ha archi uscenti, altrimenti il problema non ha soluzione, 
+    per cui possiamo già considerare v come esplorato.
+    Uso una DFS che parte da u. Se da u raggiungo un nodo che ha v nella sua lista di adiacenza,
+    allora il cammino esiste e termino la procedura tornando TRUE.
+    Se la DFS viene completata non esiste nessun cammino, termino con FALSE.
+    Complessità O(|V|+|E|) (Theta in caso di false)
+*/
+function DFS(G = (V, E), u, v) {
+    foreach (a in V) {
+        color[a] = BIANCO
+    }
+
+    if (Adj[v] == EMPTY) {
+        color[v] = NERO    
+    } else {
+        return FALSE
+    }
+
+    return DFS(u, v);
+}
+
+function DFS_VisitEsistsPath(u, v) {
+    color[u] = GRIGIO
+    if (u == v) {
+        return TRUE
+    }
+
+    foreach (a in Adj[u]) {
+        if (color[a] == BIANCO) {
+            if (DFS_VisitEsistsPath(a, v) == TRUE || a == v) {
+                return TRUE
+            }
+        }
+    }
+    color[u] = NERO
+    return FALSE
+}
+
+/* 2-b 
+Si descriva tramite pseudo-codice un algoritmo per determinare se tutti i cammini che partono da u 
+terminano in v. Se ne dimostri la correttezza e se ne calcoli la complessità.
+
+DIM. Il nodo v è terminale se non ha archi uscenti, altrimenti il problema non ha soluzione, 
+    per cui possiamo già considerare v come esplorato (NERO).
+    Uso una DFS che parte da u. Se da u raggiungo un nodo che ha v nella sua lista di adiacenza,
+    allora il cammino esiste.
+    Per induzione sul numero di nodi del grafo:
+    Caso base (n = 1) : u == v quindi VERO
+    Passo induttivo: se ho già visitato n nodi e tutti i cammini di quei nodi conducono a v e
+        se tutti i nodi della lista di adiacenza del nodo n+1 in visita raggiungono un nodo nero,
+        allora tutti i cammini che partono dal nodo in visita raggiungono v.
+    Di conseguenza se scorrendo tutta la lista di adiacenza del nodo u, trovassi un nodo a per cui esiste
+    un cammino che non termina in v, allora torno FALSE e la DFS non viene completata.
+    Se la DFS viene completata termino con TRUE.
+    Complessità Theta(|V|+|E|)
+*/
+function DFS_VisitALLPath(u, v) {
+    if (u == v) {
+        return TRUE
+    }
+
+    color[u] = GRIGIO
+    foreach (a in Adj[u]) {
+        if (color[a] == BIANCO) {
+            if (DFS_VisitEsistsPath(a, v) == FALSE) {
+                return FALSE   
+            }
+        }
+    }
+    color[u] = NERO
+    return TRUE
+}
+
+/* 2-c
+Si descriva tramite pseudo-codice un algoritmo per determinare se tutti i cammini che partono da u passano per v. Se ne
+dimostri la correttezza e se ne calcoli la complessità.
+
+DIM: la dimostrazione è come al punto 2-b, in questo caso il problema è sempre ben posto, per cui v viene 
+    colorato di nero all'inizio a prescindere.
+    Complessità O(|V|+|E|)
+*/
