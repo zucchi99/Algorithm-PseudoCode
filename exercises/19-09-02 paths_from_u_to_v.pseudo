@@ -48,33 +48,33 @@ terminano in v. Se ne dimostri la correttezza e se ne calcoli la complessità.
 
 DIM. Il nodo v è terminale se non ha archi uscenti, altrimenti il problema non ha soluzione, 
     per cui possiamo già considerare v come esplorato (NERO).
-    Uso una DFS che parte da u. Se da u raggiungo un nodo che ha v nella sua lista di adiacenza,
-    allora il cammino esiste.
+    PROP: Se durante la DFS di un nodo raggiungo solo nodi neri, tutti i cammini che partono da quel nodo
+    terminano in v.
     Per induzione sul numero di nodi del grafo:
     Caso base (n = 1) : u == v quindi VERO
     Passo induttivo: se ho già visitato n nodi e tutti i cammini di quei nodi conducono a v e
         se tutti i nodi della lista di adiacenza del nodo n+1 in visita raggiungono un nodo nero,
         allora tutti i cammini che partono dal nodo in visita raggiungono v.
-    Di conseguenza se scorrendo tutta la lista di adiacenza del nodo u, trovassi un nodo a per cui esiste
-    un cammino che non termina in v, allora torno FALSE e la DFS non viene completata.
+    Di conseguenza se facendo una DFS da u raggiungo un nodo terminale che non è v, allora termino con FALSE
     Se la DFS viene completata termino con TRUE.
     Complessità Theta(|V|+|E|)
 */
 function DFS_VisitALLPath(u, v) {
-    if (u == v) {
-        return TRUE
-    }
-
     color[u] = GRIGIO
+
     foreach (a in Adj[u]) {
         if (color[a] == BIANCO) {
-            if (DFS_VisitEsistsPath(a, v) == FALSE) {
+            if (DFS_VisitALLPath(a, v) == FALSE) {
                 return FALSE   
             }
         }
     }
     color[u] = NERO
-    return TRUE
+    if(Adj[u] == EMPTY_SET) {
+        return FALSE;
+    } else {
+        return TRUE
+    }
 }
 
 /* 2-c
