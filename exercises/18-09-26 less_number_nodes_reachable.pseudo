@@ -7,42 +7,55 @@ Nota: Anche se si utilizzano procedure viste a lezione occorre scriverne lo pseu
  Si determini la complessita e si dimostri la correttezza della procedura proposta.
 */
 
+/*
+complexity (depends cost of kosaraju implementing lists)
+    |E|log|V| + θ(|V|) + θ(|E|)
+*/
+
+
 Less_Number_Of_Nodes_Reachable_Graph(G) {
-    //SCC_Kosaraju(G) returns a list of disjointed sets of SCC
-    //each node is in a SCC
-    //find the SCC of the node v with Find(v)
-    SCC = SCC_Kosaraju(G)
-    foreach (scc in SCC) {
-        r[scc] = |scc| //reachable nodes
+    /*
+        SCC_Kosaraju(G) returns a list of list of disjointed sets of SCC
+        sets are implemented as lists with weighted
+        BUT union and find costs θ(1):
+            union: (done only in kosaraju) 
+                always union SCC with one node so: 
+                O(min (|Sx|, |Sy|)) = O(min(|SCC|, |v| = 1))
+            find:
+                return x.rap = θ(1)
+        each node is in a SCC
+        find the SCC of the node v with Find(v)
+    */
+    SCC = SCC_Kosaraju(G) //o(|E|log|V|) (si incrementa la complessita con i sets??)
+    foreach (scc in SCC) { //O(|V|)
+        r[scc] = |scc| //reachable nodes, initially only the scc itself
         color[scc] = BIANCO
     }
-    foreach (scc in SCC) {
+    foreach (scc in SCC) { //O(|V|)
         if(color[scc] = BIANCO) {
-            Number_Of_Nodes_Reachable(scc, SCC)
+            Number_Of_Nodes_Reachable(scc, SCC) //?
         }
     }
     min = INFINITE
     sccMin = NULL
-    foreach (scc in SCC) {
+    foreach (scc in SCC) { //O(|V|)
         if(r[scc] < min) {
             min = r[scc]
             sccMin = scc
         }
     }
-    foreach(v in V) {
-        if(Find(v) == sccMin) {
-            return v
-        }
-    }
+   print(child(sccMin)) //any node in sccMin is solution, get one
 }
 
-//scc is one of the SCC
+//scc is the list of one of the SCC
 //SCC is the list of all SCC in G
 Number_Of_Nodes_Reachable(scc, SCC) {
     color[scc] = GRIGIO
-    foreach(u in scc) {
-        foreach(v in Adj[u]) { 
-            sccv = Find(v)
+    foreach(u in scc) { //O(|V|) each iteration, in total θ(|V|)
+        //foreach vertex in its scc
+        foreach(v in Adj[u]) { //O(|E|) each iteration, in total θ(|E|)
+            //foreach vertex pointed from a vertex in scc
+            sccv = Find(v) //get v.rap: θ(1)
             if(scc != sccv) {
                 //v is in another scc
                 if(color[sccv] = BIANCO) {
