@@ -32,10 +32,10 @@ function DFS_VisitEsistsPath(u, v) {
     }
 
     foreach (a in Adj[u]) {
-        if (color[a] == BIANCO) {
-            if (DFS_VisitEsistsPath(a, v) == TRUE || a == v) {
-                return TRUE
-            }
+        if (color[a] == NERO) {
+            return TRUE
+        } else if (color[a] == BIANCO) {
+            return DFS_VisitEsistsPath(a, v)
         }
     }
     color[u] = NERO
