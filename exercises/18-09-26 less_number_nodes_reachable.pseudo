@@ -9,7 +9,7 @@ Nota: Anche se si utilizzano procedure viste a lezione occorre scriverne lo pseu
 
 /*
 complexity (depends cost of kosaraju implementing lists)
-    |E|log|V| + θ(|V|) + θ(|E|)
+    θ(|V|) + θ(|E|) + θ(|V|) + θ(|E|) = θ(|V|) + θ(|E|)
 */
 
 
