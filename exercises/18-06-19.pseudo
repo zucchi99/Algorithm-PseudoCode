@@ -1,0 +1,44 @@
+/* Es 3
+Dato un grafo G = (V, E) non orientato, i cui vertici sono colorati di rosso o verde, si vuole calcolare per ogni nodo v ∈ V il
+valore dverde(v) definito come la distanza da v a un qualsiasi nodo verde di G.
+
+OSS: uso delle BFS. Siccome il grafo non è orientato i cammini da v a un nodo verde sono uguali a quelli
+    dal nodo verde a v. Scandisco la lista dei nodi alla ricerca di uno verde e bianco. Trovato il nodo, faccio
+    una bfs dal nodo. Se a visita finita dovessero esserci ancora nodi bianchi, ne trovo un altro verde e faccio
+    partire un'altra BFS e così via finchè non ho visitato tutti i nodi del grafo. il vettore d_verde è il vettore
+    delle distanze ottenuto dalle BFS
+    Complessità: Theta(|V|+|E|)
+*/
+
+function distanceFromGreens(G = (V, E)) {
+    foreach (v in V) {
+        color[v] = BIANCO
+        d_verde[v] = INFINITY
+    }
+
+    foreach (v in V) {
+        if (v is VERDE && color[v] == BIANCO) {
+            BFS_Visit(v)   
+        }
+    }
+
+    return d_verde
+}
+
+function BFS_Visit(s) {
+    color[s] = GRIGIO
+    d_verde[v] = 0
+    Q = new_Queue()
+    InsertInQueue(s, Q)
+    while (Q != EMPTY_SET) {
+        u = Dequeue(Q)
+        foreach (v in Adj[v]) {
+            if (color[v] == BIANCO) {
+                color[v] = GRIGIO
+                d_verde[v] = d_verde[u] + 1
+                EnQueue(v)   
+            }
+        }
+        color[u] = NERO
+    }
+}
