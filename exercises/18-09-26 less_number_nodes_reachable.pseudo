@@ -13,12 +13,25 @@ Less_Number_Of_Nodes_Reachable_Graph(G) {
     //find the SCC of the node v with Find(v)
     SCC = SCC_Kosaraju(G)
     foreach (scc in SCC) {
-        r[scc] = |scc|
+        r[scc] = |scc| //reachable nodes
         color[scc] = BIANCO
     }
     foreach (scc in SCC) {
         if(color[scc] = BIANCO) {
             Number_Of_Nodes_Reachable(scc, SCC)
+        }
+    }
+    min = INFINITE
+    sccMin = NULL
+    foreach (scc in SCC) {
+        if(r[scc] < min) {
+            min = r[scc]
+            sccMin = scc
+        }
+    }
+    foreach(v in V) {
+        if(Find(v) == sccMin) {
+            return v
         }
     }
 }
