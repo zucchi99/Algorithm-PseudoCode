@@ -17,6 +17,7 @@ Transitive_Closure(G) {
 
 //algorithm 1
 //θ(|V| + |E|) * O(|V|) = O(|V| * (|V| + |E|))
+//NB: if graph is fully connected ==> |E| = |V|^2 = O(|V| * (|V| + |V|^2)) = O(|V|^3)
 Transitive_Closure_SCC(SCC, Tops, TC) {
     while(TopS != EMPTY) { //O(|V|)
         scc = peek_last(TopS)
