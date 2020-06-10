@@ -53,7 +53,7 @@ DIM. Il nodo v è terminale se non ha archi uscenti, altrimenti il problema non 
     Per induzione sul numero di nodi del grafo:
     Caso base (n = 1) : u == v quindi VERO
     Passo induttivo: se ho già visitato n nodi e tutti i cammini di quei nodi conducono a v e
-        se tutti i nodi della lista di adiacenza del nodo n+1 in visita raggiungono un nodo nero,
+        se tutti i nodi della lista di adiacenza del nodo n+1 in visita sono neri,
         allora tutti i cammini che partono dal nodo in visita raggiungono v.
     Di conseguenza se facendo una DFS da u raggiungo un nodo terminale che non è v, allora termino con FALSE
     Se la DFS viene completata termino con TRUE.
