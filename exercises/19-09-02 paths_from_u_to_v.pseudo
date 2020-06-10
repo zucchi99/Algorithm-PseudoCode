@@ -25,14 +25,14 @@ function DFS(G = (V, E), u, v) {
     return DFS(u, v);
 }
 
-function DFS_VisitEsistsPath(u, v) {
-    color[u] = GRIGIO
+function DFS_VisitExistsPath(u, v) {
     if (u == v) {
         return TRUE
     }
 
+    color[u] = GRIGIO
     foreach (a in Adj[u]) {
-        if (color[a] == NERO) {
+        if (a == v) {
             return TRUE
         } else if (color[a] == BIANCO) {
             return DFS_VisitEsistsPath(a, v)
@@ -72,10 +72,11 @@ function DFS_VisitALLPath(u, v) {
             }
         }
     }
-    color[u] = NERO
+
     if(Adj[u] == EMPTY_SET) {
-        return FALSE;
+        return FALSE
     } else {
+        color[u] = NERO
         return TRUE
     }
 }
