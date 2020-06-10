@@ -1,0 +1,44 @@
+/*
+Esercizio 2.
+Sia G = (V;E) un grafo orientato.
+ Scrivere lo pseudocodice di una procedura eciente che, dato G in input, restituisca un nodo x di G che raggiunge il
+minimo numero di nodi di G. Nel caso esistano piu scelte possibili per x, una qualsiasi va bene.
+Nota: Anche se si utilizzano procedure viste a lezione occorre scriverne lo pseudocodice interamente.
+ Si determini la complessita e si dimostri la correttezza della procedura proposta.
+*/
+
+Less_Number_Of_Nodes_Reachable_Graph(G) {
+    //SCC_Kosaraju(G) returns a list of disjointed sets of SCC
+    //each node is in a SCC
+    //find the SCC of the node v with Find(v)
+    SCC = SCC_Kosaraju(G)
+    foreach (scc in SCC) {
+        r[scc] = |scc|
+        color[scc] = BIANCO
+    }
+    foreach (scc in SCC) {
+        if(color[scc] = BIANCO) {
+            Number_Of_Nodes_Reachable(scc, SCC)
+        }
+    }
+}
+
+//scc is one of the SCC
+//SCC is the list of all SCC in G
+Number_Of_Nodes_Reachable(scc, SCC) {
+    color[scc] = GRIGIO
+    foreach(u in scc) {
+        foreach(v in Adj[u]) { 
+            sccv = Find(v)
+            if(scc != sccv) {
+                //v is in another scc
+                if(color[sccv] = BIANCO) {
+                    r[sccv] = Number_Of_Nodes_Reachable(sccv, SCC)
+                }
+                r[scc] += r[sccv]
+            }
+        }
+    }
+    color[scc] = NERO
+    return r[scc]
+}
