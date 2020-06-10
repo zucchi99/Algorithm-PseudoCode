@@ -60,8 +60,11 @@ DIM. Il nodo v è terminale se non ha archi uscenti, altrimenti il problema non 
     Complessità Theta(|V|+|E|)
 */
 function DFS_VisitALLPath(u, v) {
-    color[u] = GRIGIO
+    if(u == v) {
+        return TRUE
+    }
 
+    color[u] = GRIGIO
     foreach (a in Adj[u]) {
         if (color[a] == BIANCO) {
             if (DFS_VisitALLPath(a, v) == FALSE) {
