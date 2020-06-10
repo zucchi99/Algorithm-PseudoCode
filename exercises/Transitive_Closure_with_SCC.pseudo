@@ -15,6 +15,8 @@ Transitive_Closure(G) {
     Transitive_Closure(SCC, Tops, TC)
 }
 
+//algorithm 1
+//θ(|V| + |E|) * O(|V|) = O(|V| * (|V| + |E|))
 Transitive_Closure_SCC(SCC, Tops, TC) {
     while(TopS != EMPTY) { //O(|V|)
         scc = peek_last(TopS)
@@ -22,7 +24,7 @@ Transitive_Closure_SCC(SCC, Tops, TC) {
             foreach (v in Adj[u]) { //O(|E|) each iteration, in total θ(|E|)
                 sccv = Find(v)
                 if(sccv != scc) {
-                    for(j = 0 to |SCC|) { //O(|V|)
+                    for(j = 0 to |SCC|) { //θ(|SCC|) = O(|V|)
                         if(TC[sccv, j] = TRUE) {
                             TCC[scc, j] = TRUE
                         }
@@ -32,4 +34,24 @@ Transitive_Closure_SCC(SCC, Tops, TC) {
         }
     }
     
+}
+
+//algorithm 2
+//O(|V|) * O(|V|) * O(|V|) = O(|V|^3)
+Transitive_Closure_SCC(SCC, Tops, TC) {
+    while(TopS != EMPTY) { //θ(|SCC|) = O(|V|)
+        scc = peek_last(TopS)
+        for(sccj = 0 to |SCC|) { //θ(|SCC|) = O(|V|)
+            //for each scc
+            if(TC[scc, sccj] = TRUE) {
+                //if scc reaches sccj
+                for(k = 0 to |SCC|) { //θ(|SCC|) = O(|V|)
+                    //each scck reached from sccj is also reached from scc
+                    if(TC[sccj, k] = TRUE) {
+                        TCC[scc, k] = TRUE
+                    }
+                }
+            }
+        }
+    }
 }
