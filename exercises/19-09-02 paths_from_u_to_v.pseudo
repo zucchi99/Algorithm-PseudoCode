@@ -35,7 +35,7 @@ function DFS_VisitExistsPath(u, v) {
         if (a == v) {
             return TRUE
         } else if (color[a] == BIANCO) {
-            return DFS_VisitEsistsPath(a, v)
+            return DFS_VisitExistsPath(a, v)
         }
     }
     color[u] = NERO
