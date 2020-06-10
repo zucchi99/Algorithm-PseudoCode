@@ -1,0 +1,16 @@
+function MST-Increment(G, T, {u, v}) {
+    G' = G \ {u, v}
+    T' = MST(G')
+
+    sumT = 0;
+    foreach (e in T) {
+        sumT = sumT + w(e)
+    }
+
+    sumT'= 0;
+    foreach (e in T') {
+        sumT' = sumT'+ w(e)
+    }
+
+    return sumT' - sumT + 1
+}
