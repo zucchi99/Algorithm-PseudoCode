@@ -26,3 +26,79 @@ bh(x) {
         return -1
     }
 }
+
+/* Alternativa: calcolo dell'altezza nera */
+function bh(x) {
+    if (x == NULL) {
+        return 0   
+    }
+
+    if (x.left.color == BLACK) {
+        return 1 + bh(x.left)
+    }
+
+    if (x.right.color == BLACK) {
+        return 1 + bh(x.right)
+    }
+}
+
+/* Esercizio 2.
+Sia T un B-tree di grado t ≥ 2, contenente n chiavi distinte. Dato un nodo x di T ed 
+un indice 1 ≤ i < n[x] (si noti che i != n[x]),
+si consideri il problema di determinare (se esiste) la chiave successore dell’i-esima chiave di x.
+
+Complessità O(log_t n) CPU, O(log_t n) R/W (Entrambe Theta se scendo l'albero)
+*/
+
+function successor(T, x, i) {
+    ReadFromDisk(x)
+    if (x.leaf) {   //Siccome i < n[x] non è necessario risalire l'albero (non sarò mai alla fine della foglia)
+        return x.key[i+1]
+    } else {
+        x = x.c[i+1]
+        ReadFromDisk(x)
+        while (!x.leaf) {   //Cerco il minimo del sottoalbero radicato in c[i+1]
+            x = x.c[1]
+            ReadFromDisk(x)
+        }
+        return x.key[1]
+    }
+}
+
+/* Esercizio 4.
+Sia G = (V, E) un grafo orientato.
+a. Si scriva lo pseudocodice di una procedura che dati G e u ∈ V decide se ogni nodo di V 
+raggiunge u. Si dimostri la correttezza e si calcoli la complessità della procedura proposta.
+b. Dato G si consideri il problema di decidere se esiste un nodo u ∈ V raggiunto da ogni altro nodo.
+Come si potrebbe utilizzare la procedura descritta al punto a. per risolvere il problema? 
+Quale sarebbe la complessità di tale procedura? Si potrebbe risolvere il problema in modo 
+più efficiente?
+*/
+
+/*
+Complessità Theta(|V|+|E|) per il calcolo del grafo trasporto
+DIM: Se tutti i nodi di V raggiungono u, vuol dire che nel grafo trasposto il nodo u raggiunge
+    tutti gli altri nodi.
+*/
+function reachability(G = (V, E), u) {
+    G' = Transpose(G)   //Calcolo il grafo trasporto (questa operazione non è necessaria nel punto b)
+    BFS(G', u)          //Faccio una BFS di G' dal nodo u
+    foreach (v in V) {
+        if(color[v] != BLACK) {
+            return FALSE
+        }
+    }
+    return TRUE
+}
+
+/*
+Complessità O(|V|(|V|+|E|))
+*/
+function existReachability(G = (V, E), u) {
+    G' = Transpose(G)   //Calcolo la trasposta una volta sola
+    foreach (v in V) {
+        if (reachability(G', v) == TRUE) {
+            return TRUE
+        }
+    }   
+}
