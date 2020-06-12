@@ -1,0 +1,45 @@
+function searchGreen(x) {
+    if (x != NIL) {
+        y = searchGreen(x.left)
+        if (y != NIL) {
+            return y   
+        }
+
+        if(x.color == GREEN) {
+            return x
+        }
+
+        y = searchGreen(x.right)
+        if (y != NIL) {
+            return y   
+        }
+    }
+    return NIL
+}
+
+function fixGreen(T, x) {
+    if(x == T.root || x == NIL || x.parent.color == RED || x.left.color == RED || x.right.color == RED) {
+        x.color = BLACK
+    } else {
+        x.color = RED
+        bhL = bh(x.parent.left)
+        bhR = bh(x.parent.right)
+        if(bhL != bhR) {
+            x.color = BLACK
+        }
+    }
+}
+
+function bh(x) {
+    if (x == NULL) {
+        return 1
+    }
+
+    if (x.left.color == BLACK) {
+        return 1 + bh(x.left)
+    }
+
+    if (x.right.color == BLACK) {
+        return 1 + bh(x.right)
+    }
+}
