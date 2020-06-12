@@ -5,18 +5,14 @@
     rank >= tree height
     complexity:
     m MUF with n make = O(m * α(n)):
-        n = θ(n) make:     θ(n) * θ(1)  ==> O(m) worst case
-        f = O(m) find:     O(m) * α(n)  ==> O(m * α(n)) worst case
-        u = O(n) union:    O(n) * α(n)  ==> O(n * α(n)) worst case
-    O(m) + O(m * α(n)) + O(n α(n)) = O(m * α(n))
+        n = θ(n) make:     θ(n) * θ(1)   ==> O(m) worst case
+        f = O(m) find:     O(m) * log(n) ==> O(m * log(n)) worst case
+        u = O(n) union:    O(n) * log(n) ==> O(n * log(n)) worst case
+    O(m) + O(m * log(n)) + O(n log(n)) =^ O(m * α(n))
     
-    Theorem:
-        m MUF with n make = O(m * α(n))
+    ^Theorem:
+        m MUF with n make costs O(m * α(n))
         where α(n) is the inverse of Ackermann Function
-        PC_Rank_Union(x, y) costs α(n):
-            O(|Sx| + |Sy|) = α(n)
-        PC_Rank_Find(x) costs α(n):
-            O(|Sx|) = α(n)
 */
 
 struct Rank_Tree_Set {
@@ -31,14 +27,14 @@ Rank_Make(x) { //θ(1)
     return x
 }
 
-PC_Rank_Find(x) { //O(|Sx|) = α(n)
+PC_Rank_Find(x) { //O(|Sx|) = O(log n)
     if(x != x.parent) {
         x.parent = PC_Rank_Find(x.parent)
     }
     return x.parent
 }
 
-PC_Rank_Union(x, y) { //O(|Sx| + |Sy|) = α(n)
+PC_Rank_Union(x, y) { //O(|Sx| + |Sy|) = O(log n)
     w = PC_Rank_Find(x) //O(|Sx|)
     z = PC_Rank_Find(y) //O(|Sy|)
     if(w != z) {

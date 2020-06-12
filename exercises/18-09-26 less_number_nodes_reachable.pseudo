@@ -1,7 +1,7 @@
 /*
 Esercizio 2.
 Sia G = (V;E) un grafo orientato.
- Scrivere lo pseudocodice di una procedura eciente che, dato G in input, restituisca un nodo x di G che raggiunge il
+ Scrivere lo pseudocodice di una procedura efficiente che, dato G in input, restituisca un nodo x di G che raggiunge il
 minimo numero di nodi di G. Nel caso esistano piu scelte possibili per x, una qualsiasi va bene.
 Nota: Anche se si utilizzano procedure viste a lezione occorre scriverne lo pseudocodice interamente.
  Si determini la complessita e si dimostri la correttezza della procedura proposta.
@@ -29,26 +29,45 @@ Less_Number_Of_Nodes_Reachable_Graph(G) {
     SCC = SCC_Kosaraju(G) //o(|E|log|V|) (si incrementa la complessita con i sets??)
     foreach (scc in SCC) { //O(|V|)
         r[scc] = |scc| //reachable nodes, initially only the scc itself
-        color[scc] = BIANCO
+        //color[scc] = BIANCO
     }
+    min = INFINITE
+    sccMin = NULL
+    foreach(scc in SCC) { //O(|V| + |E|)
+        hasOuterEdges = FALSE;
+        while(u in scc && !hasOuterEdges) {
+            while(v in Adj[u] && !hasOuterEdges) {
+                hasOuterEdges = Find(v) != Find(u)
+                r[scc] = INFINITE
+            }
+        }
+        if(!hasOuterEdges && r[scc] < min) {
+            min = r[scc]
+            sccMin = scc
+        }
+    }
+    return sccMin.first
+    
+    /*
     foreach (scc in SCC) { //O(|V|)
         if(color[scc] = BIANCO) {
             Number_Of_Nodes_Reachable(scc, SCC) //?
         }
     }
-    min = INFINITE
-    sccMin = NULL
     foreach (scc in SCC) { //O(|V|)
         if(r[scc] < min) {
             min = r[scc]
             sccMin = scc
         }
     }
-   print(child(sccMin)) //any node in sccMin is solution, get one
+    print(child(sccMin)) //any node in sccMin is solution, get one
+    */
 }
 
 //scc is the list of one of the SCC
 //SCC is the list of all SCC in G
+//SBAGLIATO ==> calcola certe scc due volte
+//deve avere una complessita pari alla chiusura transitiva su G aciclico
 Number_Of_Nodes_Reachable(scc, SCC) {
     color[scc] = GRIGIO
     foreach(u in scc) { //O(|V|) each iteration, in total θ(|V|)
@@ -59,7 +78,7 @@ Number_Of_Nodes_Reachable(scc, SCC) {
             if(scc != sccv) {
                 //v is in another scc
                 if(color[sccv] = BIANCO) {
-                    r[sccv] = Number_Of_Nodes_Reachable(sccv, SCC)
+                    r[sccv] += Number_Of_Nodes_Reachable(sccv, SCC)
                 }
                 r[scc] += r[sccv]
             }
