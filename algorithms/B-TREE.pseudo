@@ -1,0 +1,134 @@
+/*
+    I BTree sono una generalizzazione dei BST bilanciati.
+    L'albero non può risedere nella memoria principale, pertanto ogni qual volta si voglia eseguire
+    una operazione, bisogna necessariamente caricare una quantità costante di porzione dell'albero
+    nella memoria principale. Da tale complicanza, si aggiunge il calcolo di complessità 
+    delle diverse procedure, infatti :
+        - Operazioni di scrittura/lettura da disco (ovviamente molto più lente)
+        - Operazioni di CPU (molto più veloci)
+
+    Le funzioni di lettura e scrittura in memoria secondaria sono DiskRead() e WriteRead()
+
+    STRUTTUA B-TREE:
+        - Campo "n" = valore intero contenente il numero di chiavi all'interno di un nodo
+        - Campo "key" = array di valori CRESCENTI contenente le chiavi all'interno di un nodo
+        - Campo "c" = array di puntatori ai figli del nodo considerato
+        - Campo "leaf" = valore booleano per sapere se il nodo è una foglia oppure no
+    
+*/
+
+// Bisogna prima caricare in memoria il nodo
+struct Node {
+    n
+    key
+    c
+    leaf
+}
+
+// Creazione di un BTree vuoto
+BTree_Create(T, t) {// Complessità di Lettura/Scrittura = θ(1) e di CPU = θ(1)
+    x = new Node(t)
+    x.n = 0
+    x.leaf = true
+    DiskWrite(x)
+    T.root = x
+}
+
+// Ricerca della chiave k nel BTree T di grado t
+BTree_Search(T, k, t) { // Complessità di Lettura/Scrittura O(logt n) e di CPU = O(t*logt n)
+    x = T.root
+    DiskRead(x)
+    if (x = NIL)
+        return NIL
+    else
+        return BTree_Search_Node(x, k, t)
+}
+
+BTree_Search_Node(x, k, t) {
+    i = 1
+    while (i<= x.n && x.key[i]<k) {
+        i++
+    }
+    if (i<=n && x.key[i]=k)
+        return x
+    if (x.leaf)
+        return NIL
+    y = x.c[i]
+    DiskRead(y)
+    return BTree_Search_Node(y, k, t)
+}
+
+// Funzione di supporto nell'inserimento di chiavi
+BTree_Split(x, y, i, t) { //x,y sono in RAM e x non è pieno. y è pieno ed è l'i-esimo figlio di x
+    z = new Node(t)     // Complessità di Lettura/Scrittura O(1) e di CPU = O(t)
+    z.n = t-1
+    z.leaf = y.leaf
+    for(j=1 to t-1)     //copio in z le chiavi
+        z.key[j] = j.key[t+j]
+    if (!y.leaf) {
+        for (j=1 to t) {        //copio in z i figli
+            z.c[j] = y.c[t+j]
+        }
+    }
+    y.n = t-1
+    for (j=x.n down to i) {     //sposto a dx le chiavi di x
+        x.key[j+1] = x.key[j]
+    }
+    x.key[i] = y.key[t]
+    for (j=x.n+1 downto i+1) //sposto a dx i figli di x
+        x.c[j+1] = x.c[j]
+    DiskWrite(z)
+    x.c[i+1] = z
+    x.n++ 
+    DiskWrite(x)
+    DiskWrite(y)
+}
+
+// Bisogna stare attenti che non si vada ad inserire una chiave in un nodo già pieno
+// pertanto ogni volta che dovrei scendere di un livello, eseguo lo split del nodo e scendo
+// in modo da avere la sicurezza che i nodi soprastanti a dove andrò ad inserire non saranno pieni
+BTree_Insert(T, k, t) {     // Complessità di Lettura/Scrittura θ(logt n) e di CPU = O(t*logt n)
+    r = T.root
+    DiskRead(t)
+    if (r.n == 2t-1) {
+        s = new Node(t)
+        s.n = 0
+        s.c[1] = r
+        s.leaf = false
+        BTree_Split(s, r, 1, t)
+        T.root = s
+        BTree_Insert_Node_Notfull(s,k,t)
+    } else
+        BTree_Insert_Node_Notfull(r, k, t)
+}
+
+BTree_Insert_Node_Notfull(x, k, T) {
+    if (x.leaf) {
+        j = x.n
+        while(j>=1 && x.key[j]>k) {
+            x.key[j+1] = x.key[j]
+            j--
+        }
+        x.key[j+1] = k
+        x.n++
+        DiskWrite(x)
+    } else {
+        j = 1
+        while(j<=1 && x.key[j]<k) {
+            j++
+        }
+        y = x.c[j]
+        DiskRead(y)
+        if(y.n < 2t-1) {
+            BTree_Insert_Node_Notfull(y, k, t)
+        } else {
+            BTree_Split(x, y, j, t)
+            if (x.key[j] < k)
+                BTree_Insert_Node_Notfull(y, k, t)
+            else {
+                z = x.c[j+1]
+                DiskRead(z)
+                BTree_Insert_Node_Notfull(z, k, t)
+            }
+        }
+}
