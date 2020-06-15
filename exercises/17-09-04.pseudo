@@ -1,0 +1,49 @@
+/*
+Esercizio 2.
+Sia G = (V, E) un grafo orientato e aciclico. Una foglia di G è un nodo v ∈ V senza archi uscenti. Per ogni v ∈ V , definiamo il
+valore pfG (v) come il numero di percorsi in G da v ad una qualsiasi foglia di G.
+Si risponda alle seguenti domande:
+1. Se da un nodo v di G escono m archi distinti (v, v1 ), . . . , (v, vm ) ∈ E:
+• assumendo di conoscere pfG (v1 ), . . . , pfG(vm ), quanto vale pfG (v)?
+    è la somma di tutti i pfG(vi)
+• in una visita DFS di G, cosa si può dire dei tempi di fine visita di v1, . . . , vm , rispetto al tempo di fine visita di v?
+Perché?
+    Sono tutti minori per il teorema delle parentesi.
+
+2. Fornire un algoritmo efficiente per calcolare pfG (v), per ogni v ∈ V . Dimostrare la correttezza dell’algoritmo proposto, e
+calcolare la sua complessità.
+
+Complessità Theta(V+E)
+*/
+
+function pfG(G = (V, E)) {
+    pfG = new Array(|V|)
+    foreach (v in V) {
+        if (Adj[v] == EMPTY_SET) {
+            pfG[v] = 1
+            color[v] = BLACK
+        } else {
+            pfG[v] = 0
+            color[v] = WHITE
+        }
+    }
+
+    foreach (v in V) {
+        if (color[v] = WHITE) {
+            DFS_Visit_pfG(G, v)
+        }
+    }
+
+    return pfG
+}
+
+function DFS_Visit_pfG(G, s) {
+    color[s] = GREY
+    foreach (v in Adj[s]) {
+        if (color[v] == WHITE) {
+            DFS_Visit(G, s)
+        }
+        pfG[s] = pfG[s] + pfG[v]
+    }
+    color[s] = BLACK
+}
