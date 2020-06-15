@@ -1,0 +1,57 @@
+function distanciesFromU(G=(V,E,W), U) {
+
+    dist = new Array()
+    elements = new Array()
+    
+    foreach (v in V) {
+    
+        (d, e) = DijkstraStopU(G, v, U)
+
+        dist[v] = d
+        elements[v] = e
+    }    
+}
+
+
+function DijkstraStopU(G=(V,E,W), s, U) {
+
+    dw = new Array()
+    
+    foreach (v in V) {
+        dw[v] = INF
+    }
+    
+    dw[s] = 0;
+
+    Q = new MinHeap(dw)
+
+    while (Q != {}) {
+        
+        u <- ExtractMin(Q)
+
+        if (u € U){
+
+            return (dw[u], u);
+        }
+
+        foreach (v in adj(u)) {
+            if (W(u,v) + dw[u] < dw[v]) {
+
+                dw[v] <- W(u,v) + dw[u]
+
+                RepairMinHeap()
+            }
+        }
+    }
+
+    return (INF, NIL)
+}
+
+/*
+COSTO:
+
+O(|V|*(|E|log|V|))      // O grande perchè DijkstraStopU non viene sempre completata
+
+
+
+*/
