@@ -1,0 +1,44 @@
+/* Esercizio 2.
+Sia G = (V, E) un grafo orientato e aciclico.
+*/
+
+/* Si dimostri che esiste almeno un vertice v ∈ V che non ha archi entranti.
+Per assurdo:
+    se non esistesse un nodo senza archi entranti ci sarebbe un ciclo, perchè il nodo verrebbe raggiunto da un altro nodo creando un ciclo
+    perchè il grafo è connesso.
+*/
+
+/* Spiegare perché un tale nodo v può essere sempre messo al primo posto in un ordinamento topologico dei vertici di G.
+I nodi senza archi entranti in un DAG vuol dire che hanno solo archi uscenti, quindi per definizione di topological sort, tutti i nodi raggiunti da
+questo nodo sono "minori"
+*/
+
+/* Si proponga tramite pseudocodice una procedura iterativa che calcoli un ordinamento topologico del grafo G = (V, E) sfruttando le idee precedenti. 
+Si calcoli la complessità della procedura.
+
+Complessità Theta(V(V+E))
+*/
+
+function DAGnoRecursion(G, sort) {
+    while (G != EMPTY_SET) {
+        enters = new_Vet(|V|)
+        foreach (v in V) {
+            enters[v] = 0
+        }
+
+        foreach (v in V) {
+            foreach (u in Adj[v]) {
+                enters[u] = enters[u] + 1           
+            }
+        }
+
+        foreach (v in V) {
+            if (enters[v] == 0) {
+                s = v
+            }
+        }
+        
+        Enqueue(s, sort)
+        G = G \ s
+    }
+}

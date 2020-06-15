@@ -1,0 +1,51 @@
+function RBTJoin(T1, T2, k) {   //T1 < k < T2
+    bh1 = bh(T1)
+    bh2 = bh(T2)
+    x = T2.root
+
+    if (bh1 < bh2) {    //T1 è sempre il più grande in altezza
+        temp = bh1
+        bh1 = bh2
+        bh2 = bh1
+
+        temp = T1
+        T1 = T2
+        T2 = T1
+    }
+
+    y = T1.root.right
+    while (bh1 > bh2) {
+        if (y.color = BLACK) {
+            bh1 = bh1 - 1
+        }
+        y = y.right
+    }
+    
+    y.parent.right = k
+    k.parent = y.parent
+
+    y.parent = k
+    k.left = y
+    
+    k.right = x
+    x.parent = k
+
+    k.color = RED
+    if (k.parent.color = RED) {
+        RBInsertFixUp(k)   
+    }
+}
+
+function bh(x) {
+    if (x == NULL) {
+        return 0   
+    }
+
+    if (x.left.color == BLACK) {
+        return 1 + bh(x.left)
+    }
+
+    if (x.right.color == BLACK) {
+        return 1 + bh(x.right)
+    }
+}
