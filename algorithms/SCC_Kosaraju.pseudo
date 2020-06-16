@@ -15,5 +15,5 @@ SCC_Kosaraju(G) {
             DFS_visit(v, v, SCC) 
         }
     }
-
+    return SCC
 }
