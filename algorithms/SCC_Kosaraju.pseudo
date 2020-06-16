@@ -8,12 +8,13 @@ SCC_Kosaraju(G) {
         SCC[v] = NULL
     }
     while(Q != EMPTY) {
-        Head(Q)
+        v = Head(Q)
         if(color[v] = BIANCO) {
             SCC[v] = v
             //aggiorna array SCC[u] scrivendo v, rappresentante della SCC, in ogni nodo SCC[u] 
             DFS_visit(v, v, SCC) 
         }
+        Dequeue(Q)
     }
     return SCC
 }
