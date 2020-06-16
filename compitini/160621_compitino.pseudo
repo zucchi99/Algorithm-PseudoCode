@@ -1,0 +1,276 @@
+Compitino del 21/06/2016
+
+--------------------------------------------------------------------------------------------------------------
+Esercizio 1.
+
+    a. Si scriva la definizione di B-tree.
+
+Definiamo un BTree di grado t>1 (intero) un albero con le seguenti proprietà:
+
+    -   è un albero bilanciato
+    -   ogni nodo è costituito da:
+        *   n chiavi    (con n<=2t-1 e n>=t-1)
+        *   n+1 figli   (se il nodo non è foglia)
+    -   la radice invece ha n<=2t-1 e n>=1
+    -   le chiavi per ogni nodo sono ordinate in ordine crescente
+    -   per ogni nodo (tranne le foglie), l'i-esima chiave è 
+        *   > di tutte le chiavi contenute
+            nell'i-esimo figlio e nei discendenti
+        *   < di tutte le chiavi contenute
+            nell' (i+1)-esimo figlio e nei discendenti
+    -   visto che è un albero bilanciato le foglie sono tutte allo stesso livello
+
+
+    b. Si consideri un B-tree di grado t = 3 vuoto. Si inseriscano 
+    nell’ordine le chiavi 1, 2, 3, 4, 5, 10, 6, 7, 8. Si cancellino dal
+    B-tree risultante nell’ordine le chiavi 1, 2, 3. Illustrare il B-tree 
+    risultante al termine di ogni operazione di inserimento/cancellazione
+
+
+--------------------------------------------------------------------------------------------------------------
+Esercizio 2. 
+
+Sia T un RB-tree.
+
+
+    a. Si consideri il problema di trovare un nodo rosso a distanza minima dalla radice 
+    di T (nil se non esiste). Scrivere lo pseudocodice di una procedura MinRed(T) per 
+    risolvere il problema. Derminare la complessità e dimostrare la correttezza
+    dell’algoritmo proposto.
+
+function MinRed(T){
+
+    x <- T.root
+
+    // (caso particolare: albero vuoto)
+    if (x == NIL) {
+        return NIL
+    }
+
+    Q <- new Queue()    // coda FIFO
+    Enqueue(Q, x)
+
+    while (Q != {}) {
+        
+        node <- ExtractHead(Q)  // leggo l'elemento in testa alla coda e lo rimuovo
+
+        // cotrollo il nodo
+        if (node.color == RED) {
+            return node
+        }
+
+        if(!node.isLeaf()) {
+
+            // metto in coda i figli
+            Enqueue(Q, node.left)
+            Enqueue(Q, node.right)
+        }
+    }
+
+    return NIL
+}
+
+COMPLESSTA'
+
+Il while girerà O(n) volte, cioè al massimo itera tutti i nodi dell'albero (un nodo entra nella 
+quando viene scoperto come figlio ed esce quando viene "controllato", come fosse una BFS di un grafo).
+
+Se la coda viene implementata con vettore sovradimensionato (+2 puntatori a testa e coda), tutte 
+le operazioni su di essa sono costanti => il contenuto del while è in theta(1)
+
+=> si otterrà complessità totale O(n)
+
+CORRETTEZZA
+
+-   terminazione:   
+
+    Se durante la ricerca trovo un nodo rosso, mi fermo.
+
+    Se non lo trovo, esploro tutto l'albero e alla fine ritorno NIL.
+
+    Sono sicuro che la procedura termina anche in questo caso, perché: 
+
+    una volta uscito, un nodo non rientrerà più e ad un certo punto 
+    arrivo ad una foglia e smetto di inserire altri nodi
+    => la procedura termina perchè la coda ad un certo punto si svuota
+
+-   correttezza:    
+
+    Abbiamo già dimostrato che la procedura termina al primo nodo rosso che trova, 
+    quindi ora devo dimostrare che il primo nodo rosso trovato è quello più vicino 
+    alla radice.
+
+    L'RBT in questione, in quanto albero è un tipo specifico di grafo non orientato, 
+    connesso e con |V|-1 archi. Ciò che sto facendo, è a tutti gli effetti una BFS che parte
+    da T.root, in quanto segue le medesime dinamiche, tranne il discorso dei colori, che però 
+    in questo caso non servono perchè l'esplorazione non viene fatta per tutti gli adiacenti 
+    ma solo per i figli.
+
+    Per questo motivo sono sicuro di procedere in ordine di distanza e scoprire per primo il 
+    nodo rosso più vicino
+
+    b. Nell’ipotesi in cui la procedura al punto precedente su input 
+    T restituisca nil, scrivere lo pseudo-codice di una procedura
+    efficiente per determinare l’altezza di T. Derminare la complessit`a 
+    e dimostrare la correttezza dell’algoritmo proposto.
+
+OnlyBlacksHeight(T) {
+
+    x <- T.root
+    height <- 0
+
+    while (x != nil) {
+        
+        x <- x.left
+        height++
+    }
+
+    return height
+}
+
+Visto che MinRed(T) restituisce NIL, T ha soltanto nodi neri => 
+
+visto che le altezze nere sui due rami di ogni nodo devono essere uguali
+e non ci sono nodi rossi, l'albero deve essere perfettamente bilanciata =>
+
+posso scendere fino ad una qualsiasi foglia e contare
+il numero di passaggi per determinare l'altezza
+
+COMPLESSTA => theta(h) = theta(log n)
+
+
+
+
+--------------------------------------------------------------------------------------------------------------
+Esercizio 3.
+Si consideri il problema di gestire insiemi disgiunti di chiavi intere su cui 
+si deve essere in grado di effettuare le seguenti operazioni:
+1. data una chiave creare l’insieme contenente la chiave;
+2. dati due puntatori a due chiavi, unire gli insiemi che contengono le due chiavi;
+3. dato un puntatore a una chiave k, determinare la somma delle 
+chiavi appartenenti allo stesso insieme a cui appartiene k.
+
+
+a. Si proponga una struttura dati che permetta di implementare in maniera efficiente le operazioni sopra descritte.
+
+Utilizzo le liste concatenate con il puntatore al rappresentante, con l'euristica WeightedUnion e le seguenti modifiche:
+-   nell'operazione di make, inizializzo anche un parametro x.sum = x
+-   nell'operazione di link(z, w) - che collega la lista di w a quella di z - della WeightedUnion, ricalcolo
+    z.sum <- z.sum + w.sum  (in questo modo ho sempre la somma di tutti gli elementi nel rappresentante)
+-   l'operazione find resta invariata
+-   aggiunto un operazione:
+
+function Sum(x) {
+    z <- Find(x)
+    return z.sum
+}
+
+b. Si implementino tramite pseudo-codice le operazioni sopra descritte valutandone complessit`a e correttezza.
+
+le operazioni make, find e union hanno la stessa complessità di prima e continuano ad essere corrette.
+
+Sum ha complessità theta(1) (complessità di find) ed è corretta perchè:
+-   durante la creazione di un insieme, nel rappresentante, inizializzo la somma con il valore dell'elemento
+-   ad ogni union la somma nel rappresentante viene aggiornata con la somma dei 2 rappresentanti degli insiemi uniti
+
+c. Si determini il costo di m operazioni complessive di cui n operazioni di creazione.
+
+il costo è lo stesso, quindi:
+
+su m MFU + Sum, di cui n Make
+
+n Make      <-  theta(n)
+f Find      <-  theta(f) = O(m)
+s Sum       <-  theta(s) = O(m)
+u Union     <-  O(n*n)    (complessivamente in realtà di meno per l'euristica, cioè n*log n)
+
+MFU + Sum = O(m + n*log n)
+
+--------------------------------------------------------------------------------------------------------------
+Esercizio 4. 
+
+Sia G = (V, E) un grafo non orientato e connesso. 
+Sia r ∈ V un nodo del grafo. 
+Si consideri il problema di determinare il numero di nodi a distanza massima da r.
+ 
+a. Descrivere tramite pseudo-codice una procedura efficiente per risolvere il problema.
+b. Valutare la complessit`a e dimostrare la correttezza della procedura proposta.
+ 
+Utlizziamo la BFS
+ 
+Number_Node_Max_Dist(G,r) {
+ 
+    d = BFS(G,r)        // array d contenente le distanze minime da r ai suoi nodi di aidacenza
+    max = Find_Max(d)   // determina il valore max in array. teta(|V|)
+    numberMax = Find_Value_Number(d, max)   //trova quante volte il valore max è presente in d
+    return numberMax
+ 
+}
+ 
+Find_Max(A) { //array A non vuoto
+    max = A[i]
+    for (i = 2 to A.length) {
+        if (A[i] > max)
+            max = A[i]
+    }
+    return max
+}
+ 
+Find_Value_Number(A, x) { //array A non vuoto
+    count = 0
+    for (i = 1 to A.lenght) {
+        if (A[i] == max)
+            count++
+    }
+    return count
+}
+
+complessità:    
+BFS     <-  theta(|V| + |E|)
+Resto   <-  theta(|V|) 
+
+theta(|V| + |E|)
+
+correttezza: 
+la BFS termina con il vettore d contenente le distanze del cammino minimo da s ad ogni nodo
+cerco la massima e conto quante volte appare, in questo modo ho il numero di nodi alla massima distanza da s
+
+--------------------------------------------------------------------------------------------------------------
+Esercizio 5. 
+
+Stabilire quali delle seguenti affermazioni sono vere, motivando brevemente la risposta.
+
+a. L’algoritmo di Kruskal ha una complessit`a sempre inferiore a quello di Prim.    
+
+FALSO,  hanno la stessa complessità nel caso peggiore
+
+b. Se G `e un grafo non orientato, pesato, non connesso, allora non esiste un MST di G.
+
+VERO,   perchè il grafo non è connesso e l'MST deve collegare tutti i nodi
+
+c. Se G = (V, E, W) `e un grafo non orientato, connesso, aciclico e pesato, 
+allora `e possibile calcolare un MST di G in tempo O(|V| + |E|).
+
+VERO,   con queste premesse, esisterà un unico MST che è il grafo stesso
+
+d. Se G = (V, E, W) `e un grafo non orientato, connesso e pesato in cui tutti gli archi hanno peso k > 0, allora l’algoritmo di
+Prim e quello di Dijkstra a partire da uno stesso nodo sorgente s restituiscono lo stesso risultato.
+
+FALSO,  (contro-esempio con triangolo 2-1-1 )
+
+e. Se G = (V, E, W) `e un grafo orientato, connesso e pesato con pesi positivi e l’algoritmo di Dijkstra a partire da un nodo
+sorgente s ha restituito π[u] = v (v `e il predecessore di u), allora non pu`o esistere un cammino da v ad u di peso inferiore
+a W((v, u)).
+
+VERO,   se fosse esistito Dijkstra lo avrebbe visto, in quanto avrebbe continuato a percorrerlo a partire da u 
+        proprio grazie al suo peso inferiore (ricordo che l'algoritmo continua a percorrere il cammino di peso minore 
+        senza tornare indietro)
+
+f. Se G = (V, E, W) `e un grafo orientato, connesso e pesato con pesi positivi, allora un cammino di peso minimo da s a p
+seguito da un cammino di peso minimo da p a q costituisce un cammino di peso minimo da s a q
+
+FALSO,  disugualianza triangolare sui pesi
+
+--------------------------------------------------------------------------------------------------------------
+Esercizio 6. 
+
