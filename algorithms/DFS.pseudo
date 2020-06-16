@@ -38,7 +38,7 @@ DFS_Visit(G, u) { //, z) { //O(|V| + |E|)
     i[u] = TIME
     foreach (v in Adj[u]) { //O(E) each iteration, in total θ(E)
         if (color[v] = BIANCO) {
-            scc[v] = z
+            //SCC[v] = z
             pred[v] = u
             DFS_Visit(G, v) //, z)
         }

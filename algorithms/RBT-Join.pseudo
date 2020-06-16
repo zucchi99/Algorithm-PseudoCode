@@ -36,6 +36,8 @@ function RBTJoin(T1, T2, k) {   //T1 < k < T2
     }
 }
 
+//BELLIATO WTF?
+//Se entrambi nodi rossi non ritorni un cazzo
 function bh(x) {
     if (x == NULL) {
         return 0   
@@ -47,5 +49,14 @@ function bh(x) {
 
     if (x.right.color == BLACK) {
         return 1 + bh(x.right)
+    }
+}
+
+bh(x) {
+    if(x == NULL) {
+        return 0
+    } else {
+        h = x.color == BLACK ? 1 : 0
+        return h + bh(x.left)
     }
 }
