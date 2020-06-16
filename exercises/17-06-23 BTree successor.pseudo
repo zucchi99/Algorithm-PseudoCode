@@ -1,0 +1,7 @@
+/*
+Esercizio 2.
+Sia T un B-tree di grado t  2, contenente n chiavi distinte. Dato un nodo x di T ed un indice 1  i < n[x] (si noti che i 6= n[x]),
+si consideri il problema di determinare (se esiste) la chiave successore dell'i-esima chiave di x.
+a. Scrivere lo pseudocodice di una procedura, Successor(T; x; i), per risolvere il problema proposto.
+b. Si dimostri la correttezza della procedura e si calcoli la complessita in funzione di t ed n.
+*/
