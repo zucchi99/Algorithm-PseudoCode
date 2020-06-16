@@ -40,3 +40,18 @@ DFS_Visit_Topological_Sort(G, u, L) { //O(|V| + |E|)
     L = insert_on_top(L, u) //inserito in testa alla lista il nodo u
     return L
 }
+
+//scc graph
+SCC_Graph(G, SCC) {
+    L = newList(|SCC|)
+    foreach(v in V) {
+        sccV = Find(v)
+        for(u in Adj[v]) {
+            sccU = Find(u)
+            //not in: O(|E|)
+            if(sccU != Find(v) && sccU not in L[sccV]) {
+                insert(L[sccV], sccU)
+            }
+        }
+    }
+}

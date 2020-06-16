@@ -19,25 +19,28 @@ DFS(G) { //θ(|V| + |E|)
         pred[v] = NULL
         i[v] = 0
         f[v] = 0
+        //SCC[v] = NULL
     }
     TIME = 0
     foreach (v in V) { //θ(|V|)
         if(color[v] == BIANCO) {
-            DFS_Visit(G, v) //?
+            //SCC[v] = v
+            DFS_Visit(G, v) //, v)
         }
     }
 }
 
 //G = (V', E') sottografo connesso con u in V'
 //θ(|V'| + |E'|) = O(|V| + |E|) 
-DFS_Visit(G, u) { //O(|V| + |E|) 
+DFS_Visit(G, u) { //, z) { //O(|V| + |E|) 
     color[u] = GRIGIO
     TIME = TIME + 1
     i[u] = TIME
     foreach (v in Adj[u]) { //O(E) each iteration, in total θ(E)
         if (color[v] = BIANCO) {
+            scc[v] = z
             pred[v] = u
-            DFS_Visit(G, v) //?
+            DFS_Visit(G, v) //, z)
         }
     }
     color[u] = NERO
