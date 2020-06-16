@@ -19,7 +19,8 @@ Si calcoli la complessità della procedura.
 Complessità Theta(V(V+E))
 */
 
-function DAGnoRecursion(G, sort) {
+function TopologicalSortnoRecursion(G) {
+    sort = new Queue()
     while (G != EMPTY_SET) {
         enters = new_Vet(|V|)
         foreach (v in V) {
@@ -28,7 +29,7 @@ function DAGnoRecursion(G, sort) {
 
         foreach (v in V) {
             foreach (u in Adj[v]) {
-                enters[u] = enters[u] + 1           
+                enters[u] = enters[u] + 1         
             }
         }
 

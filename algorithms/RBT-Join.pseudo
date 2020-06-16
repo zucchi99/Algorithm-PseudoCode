@@ -6,11 +6,11 @@ function RBTJoin(T1, T2, k) {   //T1 < k < T2
     if (bh1 < bh2) {    //T1 è sempre il più grande in altezza
         temp = bh1
         bh1 = bh2
-        bh2 = bh1
+        bh2 = temp
 
         temp = T1
         T1 = T2
-        T2 = T1
+        T2 = temp
     }
 
     y = T1.root.right
@@ -31,7 +31,7 @@ function RBTJoin(T1, T2, k) {   //T1 < k < T2
     x.parent = k
 
     k.color = RED
-    if (k.parent.color = RED) {
+    if (k.parent.color == RED) {
         RBInsertFixUp(k)   
     }
 }
