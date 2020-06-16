@@ -1,7 +1,23 @@
-/*
-Esercizio 2.
-Sia T un B-tree di grado t  2, contenente n chiavi distinte. Dato un nodo x di T ed un indice 1  i < n[x] (si noti che i 6= n[x]),
-si consideri il problema di determinare (se esiste) la chiave successore dell'i-esima chiave di x.
-a. Scrivere lo pseudocodice di una procedura, Successor(T; x; i), per risolvere il problema proposto.
-b. Si dimostri la correttezza della procedura e si calcoli la complessita in funzione di t ed n.
+
+/* Esercizio 2.
+Sia T un B-tree di grado t ≥ 2, contenente n chiavi distinte. Dato un nodo x di T ed 
+un indice 1 ≤ i < n[x] (si noti che i != n[x]),
+si consideri il problema di determinare (se esiste) la chiave successore dell’i-esima chiave di x.
+
+Complessità O(log_t n) CPU, O(log_t n) R/W (Entrambe Theta se scendo l'albero)
 */
+
+function successor(T, x, i) {
+    ReadFromDisk(x)
+    if (x.leaf) {   //Siccome i < n[x] non è necessario risalire l'albero (non sarò mai alla fine della foglia)
+        return x.key[i+1]
+    } else {
+        x = x.c[i+1]
+        ReadFromDisk(x)
+        while (!x.leaf) {   //Cerco il minimo del sottoalbero radicato in c[i+1]
+            x = x.c[1]
+            ReadFromDisk(x)
+        }
+        return x.key[1]
+    }
+}
