@@ -32,7 +32,7 @@ Union(x, y) { //O(n)
     z = y.rap
     if(w != z) {
         while(x.next != NULL) { //O(n)
-            x = x.next
+            x = x.next //find last element of w
         }
         x.next = z //change last.next: points to z not to NULL
         while(z.next != NULL) { //O(n)
