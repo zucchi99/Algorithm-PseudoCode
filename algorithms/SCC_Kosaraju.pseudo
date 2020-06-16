@@ -1,0 +1,19 @@
+SCC_Kosaraju(G) {
+    f = new_array[|V|] //array con tempi di fine visita
+    f = DFS(G) //DFS ritorna array con tempi di fine visita
+    Q = sort(V, f, descrescente) //ordino V in Q secondo ordine descrente dell'array f
+    G' = transpose(G)
+    foreach (v in V) {
+        color[v] = BIANCO
+        SCC[v] = NULL
+    }
+    while(Q != EMPTY) {
+        Head(Q)
+        if(color[v] = BIANCO) {
+            SCC[v] = v
+            //aggiorna array SCC[u] scrivendo v, rappresentante della SCC, in ogni nodo SCC[u] 
+            DFS_visit(v, v, SCC) 
+        }
+    }
+
+}
