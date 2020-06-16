@@ -1,8 +1,8 @@
 /*
     BFS := Breadth First Search
     ogni nodo viene visitato al massimo una sola volta: O(|V|)
-        solo se flag è BIANCO, appena entrati if parte ricorsione che setta subito flag a GRIGIO
-    viene scandita al massimo volta la lista di adiancenza di un nodo:
+        solo se flag è BIANCO, allora si mette il nodo in coda e si setta subito flag a GRIGIO
+    viene scandita al massimo una volta la lista di adiancenza di un nodo:
         |Adj[v_1]| + ... + |Adj[v_n]| = |E| (con n = |V|, 2*|E| se orientato)
         - con liste adiacenza: O(|E|)
         - con matrice adiacenza: O(|V|)

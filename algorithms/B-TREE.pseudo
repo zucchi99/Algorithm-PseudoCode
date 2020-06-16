@@ -9,7 +9,7 @@
 
     Le funzioni di lettura e scrittura in memoria secondaria sono DiskRead() e WriteRead()
 
-    STRUTTUA B-TREE:
+    STRUTTURA B-TREE:
         - Campo "n" = valore intero contenente il numero di chiavi all'interno di un nodo
         - Campo "key" = array di valori CRESCENTI contenente le chiavi all'interno di un nodo
         - Campo "c" = array di puntatori ai figli del nodo considerato
