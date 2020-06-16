@@ -1,0 +1,281 @@
+Esercizio 1.
+Si consideri un generico B-tree T di grado t con n chiavi.
+a. Si caratterizzi precisamente la complessita computazionale delle operazioni di ricerca e inserimento di una chiave in T
+rispetto a t ed n.
+b. Si mostri un esempio di un B-tree T di grado t = 4 e di altezza maggiore di 1 tale per cui la cancellazione di una chiave
+decrementi l'altezza di T.
+
+a.
+inserimento:
+
+- theta (log_t (n)) <-  operazioni di Read-Write (devo leggere (ed eventualmente scrivere) theta(h) nodi, cioè dalla radice alla foglia)
+- O (t * log_t (n)) <-  operazioni di CPU, cioè l'iterazione di theta(h) nodi e per ogni nodo la scansione di O (t) chiavi
+
+ricerca:
+
+- O(log_t (n))      <-  operazioni di Read
+- O(t * log_t (n))  <-  operazioni di CPU
+
+
+b.  vedi foglio
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+Esercizio 2.
+a. Si scriva la definizione di RB-tree.
+b. Sia T un RB-tree tale che ogni cammino radice-foglia contiene almeno un nodo nero (diverso dalla radice) tale per cui sia
+il nodo padre che i nodi figli sono colorati anch'essi di nero. Si consideri il problema di decrementare di 1 l'altezza nera di
+T.
+Scrivere lo pseudo-codice di una procedura effciente per risolvere il problema. Derminare la complessità e dimostrare la
+correttezza dell'algoritmo proposto.
+
+
+a.  Un RBT è un binary search tree tale che:
+
+1)  ogni nodo ha una proprietà aggiuntiva chiamata colore, che può assumere come valori solo ROSSO e NERO 
+2)  le foglie, sono nodi con chiave nulla e sono di colore NERO 
+3)  Ogni nodo rosso, deve avere come figli 2 neri
+4)  Per ogni nodo, le altezze nere sul ramo destro e sul ramo sinistro devono essere uguali 
+    (l'altezza nera è il numero di nodi neri che si trova in un qualsiasi cammino tra il nodo escluso e una foglia inclusa)ù
+5)  (per convenzione) la radice dell'albero deve essere nera
+
+b.  
+
+function decreaseShitTree(T){
+
+    // ...
+
+    root <- T.root
+    decreaseShitTreeRec(root.left)
+    decreaseShitTreeRec(root.right)
+}
+
+decreaseShitTreeRec(x) {
+
+    // cotrollo se c'è la struttura
+    if (
+        x.color = black && x.parent.color = black 
+        && x.left.color = black && x.right.color=black
+    ) {
+
+        // ho trovato la struttura => mi fermo e coloro il nodo di rosso
+        x.color = red
+    } else {
+
+        // non ho trovato => continuo a cercare nei figli
+        decreaseShitTreeRec(x.left)
+        decreaseShitTreeRec(x.right)
+    }
+}
+
+COMPLESSITA':   
+
+O(n) perchè sto facendo una visita pre-order nella quale evenetualmente mi fermo.
+Nel caso peggiore, arrivo fino ai nodi che precedono le foglie. Nel caso migliore 
+trovo subito nei figli destro e sinistro della radice 2 strutture
+
+CORRETTEZZA:
+
+Per ipotesi, ogni cammino radice-foglia ha da qualche parte una struttura come descritto sopra.
+
+Questa struttura, mi permette di colorare il nodo centrale di rosso senza violare la 3) regola. Facendo ciò, ridurrò
+l'altezza nera su un ramo del padre del nodo. L'altro ramo, per ora, potrebbe ancora avere l'altezza nera di prima, ma 
+per ipotesi, in ogni suo cammino verso una foglia, prima o poi troverò questa struttura. Quando la troverò, effettuerò anche li
+l'aggiustamento, quindi l'altezza nera anche dell'altro ramo del padre del nodo, sarà aggiustata e avrò ridotto la sua bh di 1.
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Esercizio 3.
+Sia G = (V;E;w) un grafo non orientato, pesato e connesso. Si consideri il problema di determinare un albero di supporto T di
+peso minimo per G.
+a. Dimostrare o refutare la seguente affermazione: se |E| > |V|-1 ed esiste un unico arco e€E di peso massimo, allora e
+non appartiene a T.
+b. Scrivere lo pseudo-codice dell'algoritmo di Kruskal per determinare T.
+c. Annotando lo pseudo-codice di cui al punto precedente, si determini la complessita' dell'algoritmo nel caso in cui l'operazione
+di Union venga fatta facendo puntare, al contrario di quanto visto a lezione, la radice dell'albero di altezza maggiore a
+quello di altezza minore (senza path-compression).
+
+
+a.  vedi contro-esempio su disegno
+
+b.  Kruskal:
+
+function Kruskal(G) {
+    
+    foreach (u in V) {
+        Make(u)
+    }
+
+    Sort(E)
+
+    T <- {}
+
+    foreach ({u,v} in E) {
+
+        if (Find(u) != Find(v)) {
+
+            T <- T U {{u,v}}
+            Union(u,v)
+        }   
+    }
+
+    return T
+}
+
+
+c.
+
+Noi sappiamo che stiamo facendo |E| operazioni di MFU, di cui |V| make.
+
+La consegna descrive una specie di Union by Rank al contrario => ogni volta che 
+faccio una Union, l'altezza degli alberi sarà sempre quella del più grande incrementata di 1:
+-   se i 2 alberi hanno la stessa altezza, si incrementa di 1 (come WU)
+-   se un albero A ha altezza > di un albero B l'altezza del nuovo albero sarà A.rank+1
+    (incremento quella dell'albero più grande + 1)
+
+Nel caso peggiore:
+- faccio n make
+- unisco 2 insiemi qualsiasi ottenendone uno di rango 2
+- Ora unisco sempre l'insieme di rango più grande ad un insieme di rango 1 (n-1 volte, contando anche la prima)
+ 
+facendo le n-1 union: 
+(discorso della sommatoria con O(n^2) )
+
+=> find e union in O(n), dove n è il numero di make
+
+quindi nel nostro caso, per le MFU abbiamo:
+-   theta(|V|) operazioni di make
+-   theta(|E|) operazioni di find, ongnuna in O(|V|)
+-   theta(|V|) operazioni di union, ognuna in O(|V|)
+
+=>  abbiamo in totale theta(|V|) + O(|E|*|V|) + O(|V|^2)
+
+visto che il grafo è connesso |E| = omega(|V|), O(|V|^2), quindi: 
+    O(|E|*|V|)
+
+La complessità totale è quindi: 
+O(|E|log|V|)    // ordinamento
++ O(|E|*|V|)    // MFU
+= O(|E|*|V|)
+
+--------------------------------------------------------------------------------------------------------------------------------
+Esercizio 4.
+
+Sia G = (V;E;w) un grafo non orientato e pesato con pesi positivi. Dato un vertice s appartiene a V , si consideri l'algoritmo di Dijkstra
+visto a lezione per il calcolo dell'albero dei cammini di peso minimo da s.
+
+a. Si caratterizzi la complessità dell'algoritmo nel caso in cui la coda di priorità venga implementata con una min-heap o con
+un array. Quali sono i vantaggi/svantaggi nell'adottare le due soluzioni?
+
+b. Si supponga di interrompere l'algoritmo quando la coda di priorità Q contiene un solo elemento (anzichè quando è vuota).
+Più precisamente, si rimpiazzi la riga "while Q != VUOTO"  con "while |Q| > 1".
+L'algoritmo così modicato rimane corretto? Motivare la risposta.
+
+c. Si assuma che esista un unico MST T di G. E'
+possibile che l'albero restituito da Dijkstra(G,w,s) non condivida alcun
+arco con T? Motivare la risposta.
+
+function Dijkstra(G, s) {
+
+    dw = new Array() 
+    
+    foreach (v in V\{s}) {
+        dw[v] = INF
+        pi[v] = NIL
+    }   
+
+    dw[s] = 0
+    pi[s] = NIL
+
+    // creo una coda con priorità basata sul vettore dw
+    //  con gli elementi di V
+    Q <- new PriorityQueue(V, keys=dw)
+
+    while (Q != {}) {
+        
+        u <- ExtractMin(Q)  // estraggo il nodo con dw[u] minimo dalla coda (leggo e rimuovo)
+
+        foreach (v in Adj(u)) {
+            
+            if ( dw[u] + W(u,v) < dw[v] ) {
+
+                dw[v] = dw[u] + W(u,v)
+                pi[v] = u
+
+                UpdateKey(Q, v, newKey = dw[v]) // aggiorno la chiave associata a v
+            }
+        }
+
+        // Dequeue(Q, u)
+    }
+}
+
+a. complessità min-heap:
+
+PriorityQueue <-    
+    complessità della costruzione di una minHeap a 
+    partire da un vettore (disordinato). cioè:  theta(|V|)
+
+ExtractMin  <-  O(log |V|)
+UpdateKey   <-  O(log |V|)
+
+contenuto del foreach (preso nel contesto del while)    
+    <-  eseguito complessivamente O(|E|) volte 
+    =>  in totale O(|E| * log |V|), visto che contiene UpdateKey
+
+ExtractMin nel while    <-  eseguito theta(|V|) volte
+    =>  O(|V| * log |V|)
+
+=>  COMPLESSITA' TOTALE:    O(|E| * log |V|)
+
+*********************************************************************
+complessità con vettori:
+
+PriorityQueue <-    
+    complessità della costruzione di una minHeap a 
+    partire da un vettore (disordinato). cioè:  
+    -   theta(1) se uso direttamente "dw" oppure
+    -   theta(|V|) se faccio una copia
+
+ExtractMin  <-  theta(|V|)  -   (cerco il minimo, lo estraggo e lascio un buco 
+                                vuoto che nelle successive iterazioni ignorerò)
+UpdateKey   <-  theta(1)    -   (cambio semplicemente il valore associato a v)
+
+contenuto del foreach (preso nel contesto del while)    
+    <-  eseguito complessivamente O(|E|) volte 
+    =>  in totale O(|E| * theta(1)) = O(|E|)
+
+ExtractMin nel while    <-  eseguito theta(|V|) volte
+    =>  theta(|V|) * theta(|V|) = theta(|V| ^ 2)
+
+=>  COMPLESSITA' TOTALE:    theta(|V| ^ 2)
+
+Quali sono i vantaggi/svantaggi nell'adottare le due soluzioni?
+
+-   complessivamente la soluzione con min heap risulta più effciente, in particolare 
+    tutte le operazioni a parte la costruzione vengono fatte in O(log n)
+
+-   Il vantaggio dei vettori invece è che l'operazione di UpdateKey è costante
+
+b.  si, posso sostiturire "while Q != VUOTO"  con "while |Q| > 1"
+
+perchè, per come è fatto l'algoritmo, continuo a percorrere una strada finchè è la meno pesante.
+
+Di conseguenza, l'ultimo nodo rimanente è quello il cui percorso - già calcolato - è quello più pesante, 
+quindi, qualsiasi altra strada che scoprirei a paritre da lui, dovrebbe passare per la strada più pesante
+del grafo e non potrebbe fare quindi parte di uno shortest path
+
+c. Si assuma che esista un unico MST T di G. E'
+possibile che l'albero restituito da Dijkstra(G,w,s) non condivida alcun
+arco con T? Motivare la risposta.
+
+Partendo con Dijkstra dal nodo di partenza s, sono sicuro di includere nell'albero di visita l'arco di peso 
+minore, in quanto, qualunque strada alternativa per raggiungere il nodo collegato dall'arco di peso minore dovrebbe 
+passare per un arco di peso maggiore, pertanto non sarebbe conveniente e in uno shortest path da S verrebbe scartata.
+
+Se per ipotesi, esite 1 solo MST, allora certamente potrò costruirlo partendo anche da s (senza che il risultato cambi).
+
+Procedendo da s con Prim, nel primo passo, per definizione prendo l'arco di peso minore è lo esploro subito dopo s. Una volta
+esplorato l'arco, il nodo viene messo fuori dalla coda, quindi ormai fa parte dell'MST.
+
+Abbiamo trovato l'arco che sarà sempre in comune.
