@@ -1,0 +1,28 @@
+bipartito(G, s) {
+    foreach (v in V) {
+        color[v] = BIANCO
+        set[v] = BIANCO
+    }
+    color[s] = GRIGIO
+    set[s] = BLU
+    Q = s
+    while(Q != EMPTY) {
+        v = Head(Q)
+        foreach(u in Adj[v]) {
+            if(set[u] = set[v]) {
+                return false
+            } else if(color[u] = BIANCO) {
+                color[u] = GRIGIO
+                set[u] = inverseColor(set[v])
+                Enqueue(Q, u)
+            }
+        }
+        Dequeue(Q)
+        color[v] = NERO
+    }
+    return true
+}
+
+inverseColor(col) {
+    col == ROSSO ? BLU : ROSSO
+}
