@@ -1,0 +1,22 @@
+COMPLESSITA		
+INSIEMI DISGIUNTI		
+		
+operazioni:		
+m MUF di cui n make		
+N	Make	
+U	Union	
+F	Find	
+		
+M = N+U+F		
+
+impl.	ottimizz.	MUF			make(x)			union(x, y)				find(x)	
+			(caso peggiore)		θ(n) = O(m)		θ(u) = O(n)				θ(f) = O(m)	
+
+liste	nessuna		O(m + n^2)		θ(1) ==> O(m)		O(n) ==> O(n^2)				θ(1) ==> O(m)
+	weighted union	O(m * log n)		θ(1) ==> O(m)		O(min(|Sx|,|Sy|) ==> O(m * log n)	θ(1) ==> O(m)
+								
+alberi	nessuna		O(m * n)		θ(1) ==> O(m)		O(n) ==> O(n^2)				O(n) ==> O(m * n)
+	rank		O(m * log n)		θ(1) ==> O(m)		O(min(h(x), h(y)) ==> O(n * log n)	O(log n) ==> O(m * log n)
+	path compress.	O(m * a(n)) (^)		θ(1) ==> O(m)		O(min(h(x), h(y)) ==> O(n * log n)	O(log n) ==> O(m * log n)
+	
+(^) a(n): inversa funzione ackermann
