@@ -26,11 +26,16 @@ class SortAlgorithms {
 
 	Caso Migliore = Caso Peggiore = Caso Medio: tempo costante;
 	*/
-	public void MergeSort(int[] A) {
-		MergeSortRec(A, 0, A.length - 1);
+    public void mergeSort(int[] array, int p, int q) {
+        if(p < q) {
+            int r = Math.floorDiv((p + q), 2);
+            mergeSort(array, p, r);
+            mergeSort(array, r+1, q);
+            merge(array, p, q, r);
+        }
 	}
-
-	public void Merge(int[] A, int p, int q, int r) {
+	
+	public void merge(int[] A, int p, int q, int r) {
 		int i = p;
 		int j = r + 1;
 		int k = 1;
@@ -62,9 +67,9 @@ class SortAlgorithms {
 	*/	
     public void quickSort(int[] array, int p, int q) {
         if(p < q) {
-			r = partition(array, p, q);
+			int r = partition(array, p, q);
             quickSort(array, p, r-1);
-            quickSort(array,r+1, q);
+            quickSort(array, r+1, q);
 		}
 	}
 	
@@ -87,5 +92,11 @@ class SortAlgorithms {
             }
         }
         return i;
+	}
+	
+    public  void swap(int[] array, int i ,int j){
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
     }
 }
